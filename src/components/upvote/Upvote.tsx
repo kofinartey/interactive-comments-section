@@ -14,7 +14,7 @@ function Upvote({ upvote }: UpvoteProps) {
       alignItems: "center",
       justifyContent: "space-between",
       backgroundColor: "#F5F6FA",
-      maxWidth: "6.25rem",
+      width: "6.25rem",
       padding: "0.5rem 1rem",
       borderRadius: "0.5rem",
       "& button": {
