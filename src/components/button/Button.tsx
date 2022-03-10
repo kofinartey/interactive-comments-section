@@ -22,6 +22,10 @@ function Button({ children, color, ...rest }: ButtonProps) {
           : "#67727E",
       fontWeight: "bold",
       fontSize: "0.8125rem",
+      transition: "all 0.3s",
+      "&:hover": {
+        opacity: 0.7,
+      },
     },
   })();
   return (

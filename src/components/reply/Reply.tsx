@@ -36,8 +36,7 @@ function Reply({ reply }: ReplyProps) {
             <p className={classes.createdAt}>{reply.createdAt}</p>
           </div>
           <p className={classes.text}>
-            <span>{reply.replyingTo}</span>
-            {reply.content}
+            <span>{reply.replyingTo}</span> {reply.content}
           </p>
 
           <div className={classes.upvote}>

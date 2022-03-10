@@ -11,7 +11,6 @@ type CommentProps = {
 };
 
 function Comment({ comment }: CommentProps) {
-  console.log(comment);
   const classes = CommentStyles();
 
   return (

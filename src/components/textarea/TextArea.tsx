@@ -1,9 +1,11 @@
 import React from "react";
 import { makeStyles } from "@mui/styles";
 
-type TextAreaProps = {};
+type TextAreaProps = {
+  placeholder?: string;
+};
 
-function TextArea({}: TextAreaProps) {
+function TextArea({ placeholder }: TextAreaProps) {
   const classes = makeStyles({
     textarea: {
       borderRadius: "0.5rem",
@@ -19,7 +21,13 @@ function TextArea({}: TextAreaProps) {
       },
     },
   })();
-  return <textarea className={classes.textarea} name=""></textarea>;
+  return (
+    <textarea
+      className={classes.textarea}
+      placeholder={placeholder}
+      name=""
+    ></textarea>
+  );
 }
 
 export default TextArea;

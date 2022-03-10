@@ -44,7 +44,7 @@ export default makeStyles({
   "@media(min-width: 48rem)": {
     Comment: {
       display: "grid",
-      gridTemplateRows: "1fr 1fr",
+      gridTemplateRows: "3rem 1fr",
       gridTemplateColumns: " 5rem 1fr",
     },
     comment__top: {
@@ -63,6 +63,11 @@ export default makeStyles({
       gridRow: "1/2",
       marginLeft: "auto",
       alignSelf: "center",
+    },
+    replies: {
+      marginLeft: "3rem",
+      paddingLeft: "3rem",
+      borderLeft: "2px solid #EAECF1",
     },
   },
 });
