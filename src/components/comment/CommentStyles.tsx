@@ -41,6 +41,7 @@ export default makeStyles({
     borderLeft: "2px solid #EAECF1",
   },
 
+
   "@media(min-width: 48rem)": {
     Comment: {
       display: "grid",
