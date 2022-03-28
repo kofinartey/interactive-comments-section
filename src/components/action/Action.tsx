@@ -9,7 +9,7 @@ type ActionProps = {
   action: "reply" | "delete" | "edit";
 } & React.ComponentProps<"button">;
 
-function Action({ action }: ActionProps) {
+function Action({ action, ...rest }: ActionProps) {
   const classes = makeStyles({
     action: {
       display: "flex",
@@ -36,7 +36,7 @@ function Action({ action }: ActionProps) {
       ? deleteIcon
       : "";
   return (
-    <button className={classes.action}>
+    <button className={classes.action} {...rest}>
       <img src={icon} alt="" />
       <p>{text}</p>
     </button>

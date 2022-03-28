@@ -21,6 +21,14 @@ export default makeStyles({
     margin: "0 1rem",
     color: "#324152",
   },
+  userTag: {
+    backgroundColor: "#5457B6",
+    color: "white",
+    padding: "0.2rem 0.5rem",
+    marginLeft: "1rem",
+    borderRadius: "0.2rem",
+    fontSize: "0.8rem",
+  },
   createdAt: {},
   text: {
     gridRow: "2/3",
@@ -32,15 +40,40 @@ export default makeStyles({
     },
   },
   upvote: {},
-  action: {
+  delete: {
+    marginRight: "1rem",
+  },
+  reply: {},
+  replyAndDelete: {
+    gridColumn: "2/3",
+    gridRow: "3/4",
     justifySelf: "flex-end",
     alignSelf: "center",
+    display: "flex",
   },
+
   replies: {
     paddingLeft: "2rem",
     borderLeft: "2px solid #EAECF1",
   },
 
+  addReply: {
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr",
+    // gridTemplateRows: "1fr 1fr",
+    "& textarea": {
+      gridRow: "1/2",
+      gridColumn: "1/3",
+      marginBottom: "1rem",
+    },
+    "& img": {
+      width: "2rem",
+      gridRow: "2/3",
+    },
+    "& button": {
+      justifySelf: "flex-end",
+    },
+  },
 
   "@media(min-width: 48rem)": {
     Comment: {
@@ -69,6 +102,21 @@ export default makeStyles({
       marginLeft: "3rem",
       paddingLeft: "3rem",
       borderLeft: "2px solid #EAECF1",
+    },
+    addReply: {
+      gridTemplateColumns: "3rem 1fr 6rem",
+      gridTemplateRows: "1fr",
+      "& img": {
+        width: "2.5rem",
+        gridColumn: "1/2",
+        gridRow: "1/2",
+      },
+      "& textarea": {
+        gridColumn: "2/3",
+      },
+      "& button": {
+        alignSelf: "flex-start",
+      },
     },
   },
 });

@@ -1,4 +1,7 @@
-import React from "react";
+import { useContext } from "react";
+
+//my imports
+import { UserContext } from "../../contexts/UserContext";
 import Card from "../card/Card";
 import Upvote from "../upvote/Upvote";
 import Action from "../action/Action";
@@ -23,6 +26,33 @@ type ReplyProps = {
 
 function Reply({ reply }: ReplyProps) {
   const classes = ReplyStyles();
+  const user = useContext(UserContext);
+
+  const userTag =
+    user.username === reply.user.username ? (
+      <span className={classes.userTag}>you</span>
+    ) : (
+      ""
+    );
+
+  const deleteButton =
+    user.username === reply.user.username ? (
+      <div className={classes.delete}>
+        <Action action="delete" />
+      </div>
+    ) : (
+      ""
+    );
+
+  const replyButton = (
+    <div className={classes.reply}>
+      {user.username === reply.user.username ? (
+        <Action action="edit" />
+      ) : (
+        <Action action="reply" />
+      )}
+    </div>
+  );
   return (
     <div>
       <Card style={{ margin: "1rem 0" }}>
@@ -32,7 +62,9 @@ function Reply({ reply }: ReplyProps) {
               src={process.env.PUBLIC_URL + `${reply.user.image.png}`}
               alt=""
             />
-            <p className={classes.username}>{reply.user.username}</p>
+            <p className={classes.username}>
+              {reply.user.username} {userTag}
+            </p>
             <p className={classes.createdAt}>{reply.createdAt}</p>
           </div>
           <p className={classes.text}>
@@ -42,8 +74,9 @@ function Reply({ reply }: ReplyProps) {
           <div className={classes.upvote}>
             <Upvote upvote={reply.score} />
           </div>
-          <div className={classes.action}>
-            <Action action="reply" />
+          <div className={classes.replyAndDelete}>
+            {deleteButton}
+            {replyButton}
           </div>
         </div>
       </Card>
