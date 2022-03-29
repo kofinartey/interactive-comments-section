@@ -1,4 +1,3 @@
-import React from "react";
 import data from "../data.json";
 
 type upvoteType = {
@@ -19,7 +18,7 @@ type replyType = {
 
 export type actionType = upvoteType | downvoteType | replyType;
 
-type commentsType = typeof data.comments;
+export type commentsType = typeof data.comments;
 
 const commentsReducer = (state: commentsType, action: actionType) => {
   switch (action.type) {
