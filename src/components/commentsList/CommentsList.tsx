@@ -8,13 +8,15 @@ import Card from "../card/Card";
 import CommentsListStyles from "./CommentsListStyles";
 
 function CommentsList() {
-  const { comments } = useContext(CommentsContext);
   const user = useContext(UserContext);
+  const dataFromContext = useContext(CommentsContext);
+  const comments = dataFromContext?.comments;
+
   const classes = CommentsListStyles();
   return (
     <div className={classes.CommentsList}>
       <div className={classes.wrapper}>
-        {comments.map((comment) => (
+        {comments?.map((comment) => (
           <div key={comment.id}>
             <Comment comment={comment} />
           </div>

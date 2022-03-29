@@ -1,4 +1,4 @@
-import { useState, useContext, useRef } from "react";
+import React, { useState, useContext, useRef } from "react";
 
 //my imports
 import Card from "../card/Card";
@@ -7,6 +7,7 @@ import Action from "../action/Action";
 import Reply from "../reply/Reply";
 import TextArea from "../textarea/TextArea";
 import { UserContext } from "../../contexts/UserContext";
+import { CommentsContext } from "../../contexts/CommentsContext";
 import { CommentType } from "../../contexts/CommentsContext";
 import CommentStyles from "./CommentStyles";
 import Button from "../button/Button";
@@ -18,8 +19,17 @@ type CommentProps = {
 function Comment({ comment }: CommentProps) {
   const classes = CommentStyles();
   const user = useContext(UserContext);
+  const fromContext = useContext(CommentsContext);
+  const dispatch = fromContext?.dispatch;
+
   const [replying, setReplying] = useState(false);
+  const [replyText, setReplyText] = useState("");
   const replyTextAreaRef = useRef<HTMLTextAreaElement>(null);
+
+  const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    console.log(event.target.value);
+    setReplyText(event.target.value);
+  };
 
   const handleReply = () => {
     setReplying(!replying);
@@ -40,7 +50,7 @@ function Comment({ comment }: CommentProps) {
           <p className={classes.text}>{comment.content}</p>
 
           <div className={classes.upvote}>
-            <Upvote upvote={comment.score} />
+            <Upvote upvote={comment.score} commentId={comment.id.toString()} />
           </div>
           <div className={classes.replyAndDelete}>
             <Action action="reply" onClick={handleReply} />
@@ -54,6 +64,7 @@ function Comment({ comment }: CommentProps) {
             <img src={user.image.png} alt="" />
             <TextArea
               defaultValue={`@${comment.user.username}, `}
+              onChange={handleChange}
               // ref={replyTextAreaRef}
             ></TextArea>
 

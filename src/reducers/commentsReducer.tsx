@@ -1,15 +1,48 @@
-import comments from "../data.json";
+import React from "react";
+import data from "../data.json";
 
-type actionType = {
-  type: "UPVOTE" | "DOWNVOTE ";
+type upvoteType = {
+  type: "UPVOTE";
+  payload: string;
+};
+type downvoteType = {
+  type: "DOWNVOTE";
+  payload: string;
+};
+type replyType = {
+  type: "REPLY";
+  payload: {
+    id: string;
+    reply: string;
+  };
 };
 
-type commentsType = typeof comments;
+export type actionType = upvoteType | downvoteType | replyType;
+
+type commentsType = typeof data.comments;
 
 const commentsReducer = (state: commentsType, action: actionType) => {
   switch (action.type) {
     case "UPVOTE":
-      return state;
+      return state.map((comment) =>
+        comment.id.toString() !== action.payload
+          ? comment
+          : {
+              ...comment,
+              score: comment.score + 1,
+            }
+      );
+    case "DOWNVOTE":
+      return state.map((comment) =>
+        comment.id.toString() !== action.payload
+          ? comment
+          : {
+              ...comment,
+              score: comment.score - 1,
+            }
+      );
+    case "REPLY":
+      return state.map;
     default:
       return state;
   }

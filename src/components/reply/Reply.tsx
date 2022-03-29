@@ -72,7 +72,7 @@ function Reply({ reply }: ReplyProps) {
           </p>
 
           <div className={classes.upvote}>
-            <Upvote upvote={reply.score} />
+            <Upvote upvote={reply.score} commentId={reply.id.toString()} />
           </div>
           <div className={classes.replyAndDelete}>
             {deleteButton}

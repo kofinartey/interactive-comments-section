@@ -1,13 +1,15 @@
-import React from "react";
+import { useContext } from "react";
+import { CommentsContext } from "../../contexts/CommentsContext";
 import { makeStyles } from "@mui/styles";
 import minusIcon from "../../assets/icon-minus.svg";
 import plusIcon from "../../assets/icon-plus.svg";
 
 type UpvoteProps = {
   upvote: number;
+  commentId: string;
 };
 
-function Upvote({ upvote }: UpvoteProps) {
+function Upvote({ upvote, commentId }: UpvoteProps) {
   const classes = makeStyles({
     upvote: {
       display: "flex",
@@ -38,13 +40,25 @@ function Upvote({ upvote }: UpvoteProps) {
       },
     },
   })();
+
+  const fromContext = useContext(CommentsContext);
+  const dispatch = fromContext.dispatch;
+
+  const handleUpvote = () => {
+    dispatch({ type: "UPVOTE", payload: commentId });
+  };
+
+  const handleDownvote = () => {
+    dispatch({ type: "DOWNVOTE", payload: commentId });
+  };
+
   return (
     <div className={classes.upvote}>
-      <button>
+      <button onClick={handleUpvote}>
         <img src={plusIcon} alt="" />
       </button>
       <p>{upvote}</p>
-      <button>
+      <button onClick={handleDownvote}>
         <img src={minusIcon} alt="" />
       </button>
     </div>

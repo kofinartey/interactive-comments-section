@@ -1,25 +1,37 @@
-import React, { createContext, useReducer } from "react";
+import React, { createContext, useReducer, useState } from "react";
 import data from "../data.json";
 import commentsReducer from "../reducers/commentsReducer";
+import { actionType } from "../reducers/commentsReducer";
 
 export type CommentType = typeof data.comments[0];
 export type UserType = typeof data.currentUser;
 
 type CommentsContextType = {
-  comments: CommentType[];
+  comments: CommentType[] | null;
+  dispatch: React.Dispatch<actionType>;
 };
 
 type CommentsProviderProps = {
   children: React.ReactNode;
 };
 
-export const comments = data.comments;
-console.log(comments);
-export const CommentsContext = createContext<CommentsContextType>({ comments });
+export const initialComments = data.comments;
+
+export const CommentsContext = createContext<CommentsContextType>(null!);
+// export const CommentsContext = createContext<CommentsContextType>({
+//   initialComments,
+// });
 
 export function CommentsProvider({ children }: CommentsProviderProps) {
+  // const [comments, setComments] = useState(data.comments);
+  const [comments, dispatch] = useReducer(commentsReducer, initialComments);
+
+  const value = {
+    comments,
+    dispatch,
+  };
   return (
-    <CommentsContext.Provider value={{ comments }}>
+    <CommentsContext.Provider value={value}>
       {children}
     </CommentsContext.Provider>
   );
