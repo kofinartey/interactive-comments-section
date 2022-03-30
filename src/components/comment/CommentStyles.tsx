@@ -5,6 +5,11 @@ export default makeStyles({
     display: "grid",
     gridTemplateColumns: "1fr 1fr",
   },
+  modal: {
+    position: "fixed",
+    left: 0,
+    width: "100%",
+  },
   comment__top: {
     display: "flex",
     gridRow: "1/2",
@@ -83,8 +88,13 @@ export default makeStyles({
       left: "3rem",
     },
   },
-  error: {},
+  error: {
+    postion: "fixed",
+    right: 0,
+  },
 
+  //MEDIA QUERIES
+  //MEDIA QUERIES
   "@media(min-width: 48rem)": {
     Comment: {
       display: "grid",

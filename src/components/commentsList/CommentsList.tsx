@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 //my imports
 import { CommentsContext } from "../../contexts/CommentsContext";
 import { UserContext } from "../../contexts/UserContext";
-import { ReplyInterface } from "../../types/interfaces";
+import DeleteModal from "../delete-modal/DeleteModal";
 import Comment from "../comment/Comment";
 import TextArea from "../textarea/TextArea";
 import Button from "../button/Button";
@@ -18,7 +18,6 @@ function CommentsList() {
   const dataFromContext = useContext(CommentsContext);
   const comments = dataFromContext?.comments;
   const dispatch = dataFromContext.dispatch;
-
   const [commentText, setCommentText] = useState("");
   const [commentError, setCommentError] = useState(false);
 
@@ -47,6 +46,9 @@ function CommentsList() {
   const classes = CommentsListStyles();
   return (
     <div className={classes.CommentsList}>
+      {/* <div className={classes.modal}>
+        <DeleteModal />
+      </div> */}
       <div className={classes.wrapper}>
         {comments?.map((comment) => (
           <div key={comment.id}>

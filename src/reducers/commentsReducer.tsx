@@ -27,7 +27,15 @@ type replyType = {
   };
 };
 
-export type actionType = newCommentType | upvoteType | replyType;
+type deleteType = {
+  type: "DELETE";
+  payload: {
+    commentId: string;
+    replyId?: string;
+  };
+};
+
+export type actionType = newCommentType | upvoteType | replyType | deleteType;
 
 //TODO : fix the ignore statement
 // @ts-ignore
@@ -36,6 +44,8 @@ const commentsReducer: React.Reducer<commentsType, actionType> = (
   action: actionType
 ) => {
   switch (action.type) {
+    case "ADD_COMMENT":
+      return [...state, action.payload];
     case "SCORE": //PS u
       //if no replyId provided, update the comment
       if (!action.payload.replyId) {
@@ -86,9 +96,6 @@ const commentsReducer: React.Reducer<commentsType, actionType> = (
         );
       } else {
         //if replying to a reply
-        //find the comment
-        //find it's replies
-        //add reply to replies
         return state.map((comment) =>
           comment.id.toString() !== action.payload.commentId
             ? comment
@@ -98,8 +105,28 @@ const commentsReducer: React.Reducer<commentsType, actionType> = (
               }
         );
       }
-    case "ADD_COMMENT":
-      return [...state, action.payload];
+    case "DELETE":
+      //delete comment
+      if (!action.payload.replyId) {
+        return state.filter(
+          (comment) =>
+            comment.id.toString() !== action.payload.commentId && comment
+        );
+      } else {
+        //delete a reply
+        return state.map((comment) =>
+          comment.id.toString() !== action.payload.commentId
+            ? comment
+            : {
+                ...comment,
+                replies: comment.replies.filter(
+                  (reply) =>
+                    reply.id.toString() !== action.payload.replyId && reply
+                ),
+              }
+        );
+      }
+
     default:
       return state;
   }

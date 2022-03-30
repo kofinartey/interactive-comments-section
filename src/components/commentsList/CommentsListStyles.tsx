@@ -7,6 +7,13 @@ export default makeStyles({
     justifyContent: "center",
     // backgroundColor: "red",
   },
+  modal: {
+    position: "fixed",
+    left: 0,
+    top: 0,
+    width: "100%",
+    zIndex: 1,
+  },
   wrapper: {
     width: "90%",
     maxWidth: "46rem",
@@ -16,7 +23,6 @@ export default makeStyles({
     display: "grid",
     gridTemplateColumns: "1fr 1fr",
     position: "relative",
-
     "& textarea": {
       gridColumn: "1/3",
       marginBottom: "1rem",

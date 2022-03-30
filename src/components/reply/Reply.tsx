@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 //my imports
 import { UserContext } from "../../contexts/UserContext";
 import { CommentsContext } from "../../contexts/CommentsContext";
+import DeleteModal from "../delete-modal/DeleteModal";
 import TextArea from "../textarea/TextArea";
 import Card from "../card/Card";
 import Upvote from "../upvote/Upvote";
@@ -68,6 +69,18 @@ function Reply({ reply, commentId }: ReplyProps) {
     }
   };
 
+  const toggleDeleteModal = () => {};
+
+  const deleteReply = () => {
+    dispatch({
+      type: "DELETE",
+      payload: {
+        commentId,
+        replyId: reply.id.toString(),
+      },
+    });
+  };
+
   // conditional components
   // conditional components
   const userTag = user.username === reply.user.username && (
@@ -75,7 +88,7 @@ function Reply({ reply, commentId }: ReplyProps) {
   );
   const deleteButton = user.username === reply.user.username && (
     <div className={classes.delete}>
-      <Action action="delete" />
+      <Action action="delete" onClick={toggleDeleteModal} />
     </div>
   );
   const replyButton = (

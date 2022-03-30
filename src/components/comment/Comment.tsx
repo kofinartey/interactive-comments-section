@@ -2,6 +2,7 @@ import React, { useState, useContext, useRef } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 //my imports
+import DeleteModal from "../delete-modal/DeleteModal";
 import Card from "../card/Card";
 import Upvote from "../upvote/Upvote";
 import Action from "../action/Action";
@@ -23,6 +24,7 @@ function Comment({ comment }: CommentProps) {
   const fromContext = useContext(CommentsContext);
   const dispatch = fromContext?.dispatch;
 
+  const [deleteModal, setDeleteModal] = useState(true);
   const [replying, setReplying] = useState(false);
   const [replyText, setReplyText] = useState(`@${comment.user.username},`);
   const [replyError, setReplyError] = useState(false);
