@@ -5,12 +5,19 @@ export interface UserInterface {
   };
   username: string;
 }
-
-export interface ReplyInterface {
+export interface CommentInterface {
+  id: string | number;
   content: string;
   createdAt: string;
-  id: string | number;
-  replyingTo: string;
   score: number;
+  user: UserInterface;
+  replies: ReplyInterface[];
+}
+export interface ReplyInterface {
+  id: string | number;
+  content: string;
+  createdAt: string;
+  score: number;
+  replyingTo: string;
   user: UserInterface;
 }

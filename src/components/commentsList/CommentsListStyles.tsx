@@ -15,6 +15,8 @@ export default makeStyles({
   addComment: {
     display: "grid",
     gridTemplateColumns: "1fr 1fr",
+    position: "relative",
+
     "& textarea": {
       gridColumn: "1/3",
       marginBottom: "1rem",
@@ -25,6 +27,13 @@ export default makeStyles({
     "& button": {
       justifySelf: "flex-end",
     },
+  },
+  error: {
+    color: "red",
+    fontSize: "0.8rem",
+    position: "absolute",
+    bottom: "1rem",
+    left: "3rem",
   },
 
   "@media(min-width: 48rem)": {
@@ -42,6 +51,10 @@ export default makeStyles({
       "& button": {
         alignSelf: "flex-start",
       },
+    },
+    error: {
+      bottom: 0,
+      left: "3rem",
     },
   },
 });

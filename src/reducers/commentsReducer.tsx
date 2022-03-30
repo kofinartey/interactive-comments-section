@@ -1,8 +1,12 @@
 import React from "react";
 import data from "../data.json";
-import { ReplyInterface } from "../types/interfaces";
+import { ReplyInterface, CommentInterface } from "../types/interfaces";
 
 export type commentsType = typeof data.comments;
+type newCommentType = {
+  type: "ADD_COMMENT";
+  payload: CommentInterface;
+};
 
 type upvoteType = {
   type: "SCORE";
@@ -23,7 +27,7 @@ type replyType = {
   };
 };
 
-export type actionType = upvoteType | replyType;
+export type actionType = newCommentType | upvoteType | replyType;
 
 //TODO : fix the ignore statement
 // @ts-ignore
@@ -94,8 +98,8 @@ const commentsReducer: React.Reducer<commentsType, actionType> = (
               }
         );
       }
-      console.log(action.payload);
-      return state;
+    case "ADD_COMMENT":
+      return [...state, action.payload];
     default:
       return state;
   }
