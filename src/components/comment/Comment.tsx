@@ -1,4 +1,5 @@
 import React, { useState, useContext, useRef } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 //my imports
 import Card from "../card/Card";
@@ -39,8 +40,30 @@ function Comment({ comment }: CommentProps) {
   const handleReply = () => {
     if (replyText.trim() === `@${comment.user.username},`) {
       setReplyError(true);
-      console.log("Please type a reply");
     } else {
+      //select actual comment without the name in the default value
+      let replyWithoutname = replyText
+        .slice(comment.user.username.length + 2)
+        .trim();
+      dispatch({
+        type: "REPLY",
+        payload: {
+          commentId: comment.id.toString(),
+          reply: {
+            content: replyWithoutname,
+            createdAt: "now",
+            id: uuidv4(),
+            replyingTo: comment.user.username,
+            score: 0,
+            user,
+          },
+        },
+      });
+      //reset
+      // setReplyText("");
+      setReplyText(`@${comment.user.username},`);
+
+      setReplying(false);
     }
   };
 

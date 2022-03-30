@@ -1,5 +1,8 @@
 import React from "react";
 import data from "../data.json";
+import { ReplyInterface } from "../types/interfaces";
+
+export type commentsType = typeof data.comments;
 
 type upvoteType = {
   type: "SCORE";
@@ -14,14 +17,13 @@ type upvoteType = {
 type replyType = {
   type: "REPLY";
   payload: {
-    id: string;
-    reply: string;
+    commentId: string;
+    replyId?: string;
+    reply: ReplyInterface;
   };
 };
 
 export type actionType = upvoteType | replyType;
-
-export type commentsType = typeof data.comments;
 
 //TODO : fix the ignore statement
 // @ts-ignore
@@ -68,7 +70,32 @@ const commentsReducer: React.Reducer<commentsType, actionType> = (
       }
 
     case "REPLY":
-      return state.map;
+      //if replying to a comment
+      if (!action.payload.replyId) {
+        return state.map((comment) =>
+          comment.id.toString() !== action.payload.commentId
+            ? comment
+            : {
+                ...comment,
+                replies: [...comment.replies, action.payload.reply],
+              }
+        );
+      } else {
+        //if replying to a reply
+        //find the comment
+        //find it's replies
+        //add reply to replies
+        return state.map((comment) =>
+          comment.id.toString() !== action.payload.commentId
+            ? comment
+            : {
+                ...comment,
+                replies: [...comment.replies, action.payload.reply],
+              }
+        );
+      }
+      console.log(action.payload);
+      return state;
     default:
       return state;
   }

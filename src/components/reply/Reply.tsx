@@ -1,29 +1,19 @@
-import { useContext, useState } from "react";
+import React, { useContext, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 //my imports
 import { UserContext } from "../../contexts/UserContext";
+import { CommentsContext } from "../../contexts/CommentsContext";
 import TextArea from "../textarea/TextArea";
 import Card from "../card/Card";
 import Upvote from "../upvote/Upvote";
 import Action from "../action/Action";
 import Button from "../button/Button";
+import { ReplyInterface } from "../../types/interfaces";
 import ReplyStyles from "../comment/CommentStyles";
 
 type ReplyProps = {
-  reply: {
-    content: string;
-    createdAt: string;
-    id: number;
-    replyingTo: string;
-    score: number;
-    user: {
-      image: {
-        png: string;
-        webp: string;
-      };
-      username: string;
-    };
-  };
+  reply: ReplyInterface;
   commentId: string;
 };
 
@@ -31,28 +21,63 @@ type ReplyProps = {
 function Reply({ reply, commentId }: ReplyProps) {
   const classes = ReplyStyles();
   const user = useContext(UserContext);
+  const { dispatch } = useContext(CommentsContext);
   const [replying, setReplying] = useState(false);
+  const [replyText, setReplyText] = useState(`@${reply.user.username},`);
+  const [replyError, setReplyError] = useState(false);
 
+  // event handlers
   const handleToggleReply = () => {
     setReplying(!replying);
   };
 
-  const userTag =
-    user.username === reply.user.username ? (
-      <span className={classes.userTag}>you</span>
-    ) : (
-      ""
-    );
+  const handleChange: (
+    event: React.ChangeEvent<HTMLTextAreaElement>
+  ) => void = (event) => {
+    setReplyText(event.target.value);
+    setReplyError(false);
+  };
 
-  const deleteButton =
-    user.username === reply.user.username ? (
-      <div className={classes.delete}>
-        <Action action="delete" />
-      </div>
-    ) : (
-      ""
-    );
+  const handleReply = () => {
+    console.log(replyText);
+    console.log(reply.user.username);
+    if (replyText.trim() === `@${reply.user.username},`) {
+      setReplyError(true);
+    } else {
+      //select actual comment without the name in the default value
+      let replyWithoutname = replyText
+        .slice(reply.user.username.length + 2)
+        .trim();
+      dispatch({
+        type: "REPLY",
+        payload: {
+          commentId,
+          replyId: reply.id.toString(),
+          reply: {
+            id: uuidv4(),
+            content: replyWithoutname,
+            createdAt: "now",
+            score: 0,
+            replyingTo: reply.user.username,
+            user,
+          },
+        },
+      });
+      setReplyText(`@${reply.user.username},`);
+      setReplying(false);
+    }
+  };
 
+  // conditional components
+  // conditional components
+  const userTag = user.username === reply.user.username && (
+    <span className={classes.userTag}>you</span>
+  );
+  const deleteButton = user.username === reply.user.username && (
+    <div className={classes.delete}>
+      <Action action="delete" />
+    </div>
+  );
   const replyButton = (
     <div className={classes.reply}>
       {user.username === reply.user.username ? (
@@ -62,8 +87,6 @@ function Reply({ reply, commentId }: ReplyProps) {
       )}
     </div>
   );
-
-  const handleChange = () => {};
 
   //main component return method
   return (
@@ -103,13 +126,17 @@ function Reply({ reply, commentId }: ReplyProps) {
           <div className={classes.addReply}>
             <img src={user.image.png} alt="" />
             <TextArea
-              defaultValue={`@${reply.user.username}, `}
+              defaultValue={replyText}
               onChange={handleChange}
-              error={false}
+              error={replyError}
               // ref={replyTextAreaRef}
             ></TextArea>
-
-            <Button color="primary">Reply</Button>
+            {replyError && (
+              <p className={classes.error}>Please enter a valid reply</p>
+            )}
+            <Button color="primary" onClick={handleReply}>
+              Reply
+            </Button>
           </div>
         </Card>
       )}
