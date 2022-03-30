@@ -22,9 +22,10 @@ type ReplyProps = {
       username: string;
     };
   };
+  commentId: string;
 };
 
-function Reply({ reply }: ReplyProps) {
+function Reply({ reply, commentId }: ReplyProps) {
   const classes = ReplyStyles();
   const user = useContext(UserContext);
 
@@ -72,7 +73,11 @@ function Reply({ reply }: ReplyProps) {
           </p>
 
           <div className={classes.upvote}>
-            <Upvote upvote={reply.score} commentId={reply.id.toString()} />
+            <Upvote
+              upvote={reply.score}
+              replyId={reply.id.toString()}
+              commentId={commentId}
+            />
           </div>
           <div className={classes.replyAndDelete}>
             {deleteButton}

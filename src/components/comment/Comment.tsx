@@ -76,7 +76,7 @@ function Comment({ comment }: CommentProps) {
       {/* list of replies to the comment */}
       <div className={classes.replies}>
         {comment?.replies.map((reply, index) => (
-          <Reply key={index} reply={reply} />
+          <Reply key={index} reply={reply} commentId={comment.id.toString()} />
         ))}
       </div>
     </div>

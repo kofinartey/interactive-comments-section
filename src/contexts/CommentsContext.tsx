@@ -23,7 +23,8 @@ export const CommentsContext = createContext<CommentsContextType>(null!);
 // });
 
 export function CommentsProvider({ children }: CommentsProviderProps) {
-  // const [comments, setComments] = useState(data.comments);
+  // const [comments, dispatch] = useReducer(commentsReducer, initialComments);
+
   const [comments, dispatch] = useReducer<
     React.Reducer<commentsType, actionType>
   >(commentsReducer, initialComments);

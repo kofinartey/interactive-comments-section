@@ -7,9 +7,10 @@ import plusIcon from "../../assets/icon-plus.svg";
 type UpvoteProps = {
   upvote: number;
   commentId: string;
+  replyId?: string;
 };
 
-function Upvote({ upvote, commentId }: UpvoteProps) {
+function Upvote({ upvote, commentId, replyId }: UpvoteProps) {
   const classes = makeStyles({
     upvote: {
       display: "flex",
@@ -45,11 +46,19 @@ function Upvote({ upvote, commentId }: UpvoteProps) {
   const dispatch = fromContext.dispatch;
 
   const handleUpvote = () => {
-    dispatch({ type: "UPVOTE", payload: commentId });
+    dispatch({
+      type: "SCORE",
+      operation: "UPVOTE",
+      payload: { commentId, replyId },
+    });
   };
 
   const handleDownvote = () => {
-    dispatch({ type: "DOWNVOTE", payload: commentId });
+    dispatch({
+      type: "SCORE",
+      operation: "DOWNVOTE",
+      payload: { commentId, replyId },
+    });
   };
 
   return (
