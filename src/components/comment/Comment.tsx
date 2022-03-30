@@ -23,18 +23,27 @@ function Comment({ comment }: CommentProps) {
   const dispatch = fromContext?.dispatch;
 
   const [replying, setReplying] = useState(false);
-  const [replyText, setReplyText] = useState("");
+  const [replyText, setReplyText] = useState(`@${comment.user.username},`);
+  const [replyError, setReplyError] = useState(false);
   const replyTextAreaRef = useRef<HTMLTextAreaElement>(null);
 
   const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    console.log(event.target.value);
     setReplyText(event.target.value);
+    setReplyError(false);
   };
 
-  const handleReply = () => {
+  const handleToggleReply = () => {
     setReplying(!replying);
     // replyTextAreaRef.current.focus();
   };
+  const handleReply = () => {
+    if (replyText.trim() === `@${comment.user.username},`) {
+      setReplyError(true);
+      console.log("Please type a reply");
+    } else {
+    }
+  };
+
   return (
     <div>
       <Card style={{ marginTop: "1rem" }}>
@@ -53,7 +62,7 @@ function Comment({ comment }: CommentProps) {
             <Upvote upvote={comment.score} commentId={comment.id.toString()} />
           </div>
           <div className={classes.replyAndDelete}>
-            <Action action="reply" onClick={handleReply} />
+            <Action action="reply" onClick={handleToggleReply} />
           </div>
         </div>
       </Card>
@@ -63,12 +72,17 @@ function Comment({ comment }: CommentProps) {
           <div className={classes.addReply}>
             <img src={user.image.png} alt="" />
             <TextArea
-              defaultValue={`@${comment.user.username}, `}
+              defaultValue={replyText}
               onChange={handleChange}
+              error={replyError}
               // ref={replyTextAreaRef}
             ></TextArea>
-
-            <Button color="primary">Reply</Button>
+            {replyError && (
+              <p className={classes.error}>Please enter a valid reply</p>
+            )}
+            <Button color="primary" onClick={handleReply}>
+              Reply
+            </Button>
           </div>
         </Card>
       )}

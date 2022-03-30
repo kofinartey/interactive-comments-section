@@ -25,7 +25,7 @@ function CommentsList() {
         {/* section to add user comment */}
         <Card>
           <div className={classes.addComment}>
-            <TextArea placeholder="Add a comment..."></TextArea>
+            <TextArea placeholder="Add a comment..." error={false}></TextArea>
             <img src={process.env.PUBLIC_URL + `${user.image.png}`} alt="" />
             <Button color="primary">Send</Button>
           </div>

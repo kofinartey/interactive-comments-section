@@ -57,9 +57,11 @@ export default makeStyles({
     borderLeft: "2px solid #EAECF1",
   },
 
+  //section for entering reply
   addReply: {
     display: "grid",
     gridTemplateColumns: "1fr 1fr",
+    position: "relative",
     // gridTemplateRows: "1fr 1fr",
     "& textarea": {
       gridRow: "1/2",
@@ -73,7 +75,15 @@ export default makeStyles({
     "& button": {
       justifySelf: "flex-end",
     },
+    "& $error": {
+      color: "red",
+      fontSize: "0.8rem",
+      position: "absolute",
+      bottom: "1rem",
+      left: "3rem",
+    },
   },
+  error: {},
 
   "@media(min-width: 48rem)": {
     Comment: {
@@ -116,6 +126,9 @@ export default makeStyles({
       },
       "& button": {
         alignSelf: "flex-start",
+      },
+      "& $error": {
+        bottom: 0,
       },
     },
   },

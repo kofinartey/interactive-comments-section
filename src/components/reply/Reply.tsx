@@ -1,10 +1,12 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 
 //my imports
 import { UserContext } from "../../contexts/UserContext";
+import TextArea from "../textarea/TextArea";
 import Card from "../card/Card";
 import Upvote from "../upvote/Upvote";
 import Action from "../action/Action";
+import Button from "../button/Button";
 import ReplyStyles from "../comment/CommentStyles";
 
 type ReplyProps = {
@@ -25,9 +27,15 @@ type ReplyProps = {
   commentId: string;
 };
 
+//MAIN COMPONENT
 function Reply({ reply, commentId }: ReplyProps) {
   const classes = ReplyStyles();
   const user = useContext(UserContext);
+  const [replying, setReplying] = useState(false);
+
+  const handleToggleReply = () => {
+    setReplying(!replying);
+  };
 
   const userTag =
     user.username === reply.user.username ? (
@@ -50,10 +58,14 @@ function Reply({ reply, commentId }: ReplyProps) {
       {user.username === reply.user.username ? (
         <Action action="edit" />
       ) : (
-        <Action action="reply" />
+        <Action action="reply" onClick={handleToggleReply} />
       )}
     </div>
   );
+
+  const handleChange = () => {};
+
+  //main component return method
   return (
     <div>
       <Card style={{ margin: "1rem 0" }}>
@@ -85,6 +97,22 @@ function Reply({ reply, commentId }: ReplyProps) {
           </div>
         </div>
       </Card>
+
+      {replying && (
+        <Card style={{ marginTop: "0.3rem" }}>
+          <div className={classes.addReply}>
+            <img src={user.image.png} alt="" />
+            <TextArea
+              defaultValue={`@${reply.user.username}, `}
+              onChange={handleChange}
+              error={false}
+              // ref={replyTextAreaRef}
+            ></TextArea>
+
+            <Button color="primary">Reply</Button>
+          </div>
+        </Card>
+      )}
     </div>
   );
 }
