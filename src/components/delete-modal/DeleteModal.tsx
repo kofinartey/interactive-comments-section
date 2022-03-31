@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useContext } from "react";
 import { makeStyles } from "@mui/styles";
 
 //my imports
+import { CommentsContext } from "../../contexts/CommentsContext";
+import { ModalContext } from "../../contexts/ModalContext";
 import Card from "../card/Card";
 import Button from "../button/Button";
 
@@ -36,6 +38,21 @@ function DeleteModal() {
       },
     },
   })();
+  const { dispatch } = useContext(CommentsContext);
+  const { modalDisplay, dispatch: modalDispatch } = useContext(ModalContext);
+  const handleCancel = () => {
+    modalDispatch({ type: "HIDE_DELETE_MODAL" });
+  };
+  const handleDelete = () => {
+    dispatch({
+      type: "DELETE",
+      payload: {
+        commentId: modalDisplay.commentId,
+        replyId: modalDisplay.replyId,
+      },
+    });
+    modalDispatch({ type: "HIDE_DELETE_MODAL" });
+  };
   return (
     <div className={classes.modal}>
       <div className={classes.wrapper}>
@@ -46,8 +63,10 @@ function DeleteModal() {
             comment and can't be undone.
           </p>
           <div className={classes.buttonContainer}>
-            <Button>No, Cancel</Button>
-            <Button color="danger">Yes, Delete</Button>
+            <Button onClick={handleCancel}>No, Cancel</Button>
+            <Button color="danger" onClick={handleDelete}>
+              Yes, Delete
+            </Button>
           </div>
         </Card>
       </div>

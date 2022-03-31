@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { CommentsProvider } from "./contexts/CommentsContext";
 import { UserProvider } from "./contexts/UserContext";
+import ModalProvider from "./contexts/ModalContext";
 import CommentsList from "./components/commentsList/CommentsList";
 
 const styles = {
@@ -13,9 +14,11 @@ function ICSapp() {
   return (
     <UserProvider>
       <CommentsProvider>
-        <div style={styles}>
-          <CommentsList />
-        </div>
+        <ModalProvider>
+          <div style={styles}>
+            <CommentsList />
+          </div>
+        </ModalProvider>
       </CommentsProvider>
     </UserProvider>
   );

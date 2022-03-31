@@ -5,11 +5,7 @@ export default makeStyles({
     display: "grid",
     gridTemplateColumns: "1fr 1fr",
   },
-  modal: {
-    position: "fixed",
-    left: 0,
-    width: "100%",
-  },
+
   comment__top: {
     display: "flex",
     gridRow: "1/2",

@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 //my imports
 import { UserContext } from "../../contexts/UserContext";
 import { CommentsContext } from "../../contexts/CommentsContext";
-import DeleteModal from "../delete-modal/DeleteModal";
+import { ModalContext } from "../../contexts/ModalContext";
 import TextArea from "../textarea/TextArea";
 import Card from "../card/Card";
 import Upvote from "../upvote/Upvote";
@@ -26,6 +26,7 @@ function Reply({ reply, commentId }: ReplyProps) {
   const [replying, setReplying] = useState(false);
   const [replyText, setReplyText] = useState(`@${reply.user.username},`);
   const [replyError, setReplyError] = useState(false);
+  const { dispatch: modalDispatch } = useContext(ModalContext);
 
   // event handlers
   const handleToggleReply = () => {
@@ -69,11 +70,9 @@ function Reply({ reply, commentId }: ReplyProps) {
     }
   };
 
-  const toggleDeleteModal = () => {};
-
-  const deleteReply = () => {
-    dispatch({
-      type: "DELETE",
+  const handleDelete = () => {
+    modalDispatch({
+      type: "SHOW_DELETE_MODAL",
       payload: {
         commentId,
         replyId: reply.id.toString(),
@@ -88,7 +87,7 @@ function Reply({ reply, commentId }: ReplyProps) {
   );
   const deleteButton = user.username === reply.user.username && (
     <div className={classes.delete}>
-      <Action action="delete" onClick={toggleDeleteModal} />
+      <Action action="delete" onClick={handleDelete} />
     </div>
   );
   const replyButton = (

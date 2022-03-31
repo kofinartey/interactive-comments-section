@@ -10,6 +10,7 @@ import Reply from "../reply/Reply";
 import TextArea from "../textarea/TextArea";
 import { UserContext } from "../../contexts/UserContext";
 import { CommentsContext } from "../../contexts/CommentsContext";
+import { ModalContext } from "../../contexts/ModalContext";
 import { CommentType } from "../../contexts/CommentsContext";
 import CommentStyles from "./CommentStyles";
 import Button from "../button/Button";
@@ -23,12 +24,12 @@ function Comment({ comment }: CommentProps) {
   const user = useContext(UserContext);
   const fromContext = useContext(CommentsContext);
   const dispatch = fromContext?.dispatch;
-
-  const [deleteModal, setDeleteModal] = useState(true);
   const [replying, setReplying] = useState(false);
   const [replyText, setReplyText] = useState(`@${comment.user.username},`);
   const [replyError, setReplyError] = useState(false);
   const replyTextAreaRef = useRef<HTMLTextAreaElement>(null);
+
+  const { dispatch: modalDispatch } = useContext(ModalContext);
 
   const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setReplyText(event.target.value);
@@ -62,12 +63,36 @@ function Comment({ comment }: CommentProps) {
         },
       });
       //reset
-      // setReplyText("");
       setReplyText(`@${comment.user.username},`);
-
       setReplying(false);
     }
   };
+
+  const handleDelete = () => {
+    modalDispatch({
+      type: "SHOW_DELETE_MODAL",
+      payload: { commentId: comment.id.toString() },
+    });
+  };
+
+  //conditional components
+  const userTag = user.username === comment.user.username && (
+    <span className={classes.userTag}>you</span>
+  );
+  const deleteButton = user.username === comment.user.username && (
+    <div className={classes.delete}>
+      <Action action="delete" onClick={handleDelete} />
+    </div>
+  );
+  const replyButton = (
+    <div className={classes.replyAndDelete}>
+      {user.username === comment.user.username ? (
+        <Action action="edit" />
+      ) : (
+        <Action action="reply" onClick={handleToggleReply} />
+      )}
+    </div>
+  );
 
   return (
     <div>
@@ -78,7 +103,9 @@ function Comment({ comment }: CommentProps) {
               src={process.env.PUBLIC_URL + `${comment.user.image.png}`}
               alt=""
             />
-            <p className={classes.username}>{comment.user.username}</p>
+            <p className={classes.username}>
+              {comment.user.username} {userTag}
+            </p>
             <p className={classes.createdAt}>{comment.createdAt}</p>
           </div>
           <p className={classes.text}>{comment.content}</p>
@@ -87,7 +114,8 @@ function Comment({ comment }: CommentProps) {
             <Upvote upvote={comment.score} commentId={comment.id.toString()} />
           </div>
           <div className={classes.replyAndDelete}>
-            <Action action="reply" onClick={handleToggleReply} />
+            {deleteButton}
+            {replyButton}
           </div>
         </div>
       </Card>
