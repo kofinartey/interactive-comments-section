@@ -23,21 +23,30 @@ function Reply({ reply, commentId }: ReplyProps) {
   const classes = ReplyStyles();
   const user = useContext(UserContext);
   const { dispatch } = useContext(CommentsContext);
+  const { dispatch: modalDispatch } = useContext(ModalContext);
   const [replying, setReplying] = useState(false);
   const [replyText, setReplyText] = useState(`@${reply.user.username},`);
   const [replyError, setReplyError] = useState(false);
-  const { dispatch: modalDispatch } = useContext(ModalContext);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editText, setEditText] = useState(reply.content);
 
   // event handlers
   const handleToggleReply = () => {
     setReplying(!replying);
   };
-
+  const handleToggleEditing = () => {
+    setIsEditing(!isEditing);
+  };
   const handleChange: (
     event: React.ChangeEvent<HTMLTextAreaElement>
   ) => void = (event) => {
     setReplyText(event.target.value);
     setReplyError(false);
+  };
+  const handleEditChange: (
+    event: React.ChangeEvent<HTMLTextAreaElement>
+  ) => void = (event) => {
+    setEditText(event.target.value);
   };
 
   const handleReply = () => {
@@ -70,6 +79,15 @@ function Reply({ reply, commentId }: ReplyProps) {
     }
   };
 
+  const handleEdit = () => {
+    console.log(editText);
+    dispatch({
+      type: "EDIT",
+      payload: { commentId, replyId: reply.id.toString(), update: editText },
+    });
+    setIsEditing(false);
+  };
+
   const handleDelete = () => {
     modalDispatch({
       type: "SHOW_DELETE_MODAL",
@@ -93,7 +111,7 @@ function Reply({ reply, commentId }: ReplyProps) {
   const replyButton = (
     <div className={classes.reply}>
       {user.username === reply.user.username ? (
-        <Action action="edit" />
+        <Action action="edit" onClick={handleToggleEditing} />
       ) : (
         <Action action="reply" onClick={handleToggleReply} />
       )}
@@ -115,9 +133,24 @@ function Reply({ reply, commentId }: ReplyProps) {
             </p>
             <p className={classes.createdAt}>{reply.createdAt}</p>
           </div>
-          <p className={classes.text}>
-            <span>{reply.replyingTo}</span> {reply.content}
-          </p>
+
+          {/* actual comment here but it's rendering is dependent on whether we're editing or not */}
+          {isEditing ? (
+            <div className={classes.editInput}>
+              <TextArea
+                error={false}
+                defaultValue={editText}
+                onChange={handleEditChange}
+              ></TextArea>
+              <Button color="primary" onClick={handleEdit}>
+                update
+              </Button>
+            </div>
+          ) : (
+            <p className={classes.text}>
+              <span>{reply.replyingTo}</span> {reply.content}
+            </p>
+          )}
 
           <div className={classes.upvote}>
             <Upvote
@@ -127,12 +160,17 @@ function Reply({ reply, commentId }: ReplyProps) {
             />
           </div>
           <div className={classes.replyAndDelete}>
-            {deleteButton}
-            {replyButton}
+            {!isEditing && (
+              <>
+                {deleteButton}
+                {replyButton}
+              </>
+            )}
           </div>
         </div>
       </Card>
 
+      {/* only rendered when reply button is clicked */}
       {replying && (
         <Card style={{ marginTop: "0.3rem" }}>
           <div className={classes.addReply}>

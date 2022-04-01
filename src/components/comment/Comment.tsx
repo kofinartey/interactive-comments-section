@@ -27,19 +27,29 @@ function Comment({ comment }: CommentProps) {
   const [replying, setReplying] = useState(false);
   const [replyText, setReplyText] = useState(`@${comment.user.username},`);
   const [replyError, setReplyError] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editText, setEditText] = useState(comment.content);
   const replyTextAreaRef = useRef<HTMLTextAreaElement>(null);
 
   const { dispatch: modalDispatch } = useContext(ModalContext);
-
-  const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setReplyText(event.target.value);
-    setReplyError(false);
-  };
 
   const handleToggleReply = () => {
     setReplying(!replying);
     // replyTextAreaRef.current.focus();
   };
+  const handleToggleEditing = () => {
+    setIsEditing(!isEditing);
+  };
+  const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setReplyText(event.target.value);
+    setReplyError(false);
+  };
+  const handleEditChange: (
+    event: React.ChangeEvent<HTMLTextAreaElement>
+  ) => void = (event) => {
+    setEditText(event.target.value);
+  };
+
   const handleReply = () => {
     if (replyText.trim() === `@${comment.user.username},`) {
       setReplyError(true);
@@ -68,6 +78,18 @@ function Comment({ comment }: CommentProps) {
     }
   };
 
+  const handleEdit = () => {
+    console.log(editText);
+    dispatch({
+      type: "EDIT",
+      payload: {
+        commentId: comment.id.toString(),
+        update: editText,
+      },
+    });
+    setIsEditing(false);
+  };
+
   const handleDelete = () => {
     modalDispatch({
       type: "SHOW_DELETE_MODAL",
@@ -87,7 +109,7 @@ function Comment({ comment }: CommentProps) {
   const replyButton = (
     <div className={classes.replyAndDelete}>
       {user.username === comment.user.username ? (
-        <Action action="edit" />
+        <Action action="edit" onClick={handleToggleEditing} />
       ) : (
         <Action action="reply" onClick={handleToggleReply} />
       )}
@@ -108,14 +130,32 @@ function Comment({ comment }: CommentProps) {
             </p>
             <p className={classes.createdAt}>{comment.createdAt}</p>
           </div>
-          <p className={classes.text}>{comment.content}</p>
+          {/* actual reply here but it's rendering is dependent on whether we're editing or not */}
+          {isEditing ? (
+            <div className={classes.editInput}>
+              <TextArea
+                error={false}
+                defaultValue={editText}
+                onChange={handleEditChange}
+              ></TextArea>
+              <Button color="primary" onClick={handleEdit}>
+                update
+              </Button>
+            </div>
+          ) : (
+            <p className={classes.text}>{comment.content}</p>
+          )}
 
           <div className={classes.upvote}>
             <Upvote upvote={comment.score} commentId={comment.id.toString()} />
           </div>
           <div className={classes.replyAndDelete}>
-            {deleteButton}
-            {replyButton}
+            {!isEditing && (
+              <>
+                {deleteButton}
+                {replyButton}
+              </>
+            )}
           </div>
         </div>
       </Card>

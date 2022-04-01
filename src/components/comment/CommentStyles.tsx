@@ -58,6 +58,15 @@ export default makeStyles({
     borderLeft: "2px solid #EAECF1",
   },
 
+  editInput: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "flex-end",
+    "& button": {
+      marginTop: "1rem",
+    },
+  },
+
   //section for entering reply
   addReply: {
     display: "grid",

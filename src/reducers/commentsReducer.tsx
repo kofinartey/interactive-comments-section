@@ -7,6 +7,14 @@ type newCommentType = {
   type: "ADD_COMMENT";
   payload: CommentInterface;
 };
+type editType = {
+  type: "EDIT";
+  payload: {
+    commentId: string;
+    replyId?: string;
+    update: string;
+  };
+};
 
 type upvoteType = {
   type: "SCORE";
@@ -35,7 +43,12 @@ type deleteType = {
   };
 };
 
-export type actionType = newCommentType | upvoteType | replyType | deleteType;
+export type actionType =
+  | newCommentType
+  | editType
+  | upvoteType
+  | replyType
+  | deleteType;
 
 //TODO : fix the ignore statement
 // @ts-ignore
@@ -102,6 +115,33 @@ const commentsReducer: React.Reducer<commentsType, actionType> = (
             : {
                 ...comment,
                 replies: [...comment.replies, action.payload.reply],
+              }
+        );
+      }
+    case "EDIT":
+      if (!action.payload.replyId) {
+        return state.map((comment) =>
+          comment.id.toString() !== action.payload.commentId
+            ? comment
+            : {
+                ...comment,
+                content: action.payload.update,
+              }
+        );
+      } else {
+        return state.map((comment) =>
+          comment.id.toString() !== action.payload.commentId
+            ? comment
+            : {
+                ...comment,
+                replies: comment.replies.map((reply) =>
+                  reply.id.toString() !== action.payload.replyId
+                    ? reply
+                    : {
+                        ...reply,
+                        content: action.payload.update,
+                      }
+                ),
               }
         );
       }

@@ -3,13 +3,13 @@ import { makeStyles } from "@mui/styles";
 
 type TextAreaProps = {
   placeholder?: string;
-  initial?: string;
+
   error: boolean;
 } & React.ComponentProps<"textarea">;
 
 const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
   (props: TextAreaProps, ref) => {
-    const { placeholder, initial, error, ...rest } = props;
+    const { placeholder, error, ...rest } = props;
     const classes = makeStyles({
       textarea: {
         borderRadius: "0.5rem",
